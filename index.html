@@ -1,0 +1,307 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+<div class="min-h-full">
+    <div class="flex min-h-full flex-col" x-data="calculator">
+        <header>
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900 underline">Demo</h1>
+            </div>
+        </header>
+        <hr class="mt-5"/>
+
+        <!-- 3 column wrapper -->
+        <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
+            <!-- Left sidebar & main wrapper -->
+            <div class="flex-1 xl:flex">
+
+                <div class="border-b border-gray-200 xl:border-b-0 xl:border-r px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 ">
+                    <h3 class="text-xl font-bold leading-tight tracking-tight text-gray-900">Boxes</h3>
+
+                    <ul role="list" class="mt-5 divide-y divide-gray-200 border-b border-t border-gray-200">
+                        <template x-for="(box, i) in boxes">
+                            <li class="flex py-6 items-center">
+                                <div class="flex-shrink-0">
+                                    <img :src="'https://placehold.co/12x12?text=B' + (i+1)"
+                                         alt="Box"
+                                         class="h-12 w-12 rounded-md object-cover object-center sm:h-12 sm:w-12">
+                                </div>
+                                <div class="ml-4 flex flex-1 flex-col sm:ml-6">
+                                    <div>
+                                        <div class="flex items-center justify-between">
+                                            <h4 class="text-sm">
+                                                <a href="#" class="font-medium text-gray-700 hover:text-gray-800" x-text="'Box ' + (i + 1)"></a>
+                                            </h4>
+                                        </div>
+                                        <p class="mt-1 text-sm text-gray-500" x-text="box"></p>
+
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+
+                    <div>
+                        <div class="mt-2">
+                            <input type="text"
+                                   class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                   placeholder="eg. LxWxH"
+                                   x-model="box_input"
+                                   @blur="addBox"
+                            >
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="border-b border-gray-200 xl:border-b-0 xl:border-r xl:pl-6 px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+                    <h3 class="text-xl font-bold leading-tight tracking-tight text-gray-900">Products</h3>
+
+                    <ul role="list" class="mt-5 divide-y divide-gray-200 border-b border-t border-gray-200">
+                        <template x-for="(product, i) in products">
+                        <li class="flex py-6">
+                            <div class="flex-shrink-0">
+                                <img :src="'https://placehold.co/12x12?text=P' + (i + 1)"
+                                     alt="Front of mint cotton t-shirt with wavey lines pattern."
+                                     class="h-12 w-12 rounded-md object-cover object-center sm:h-12 sm:w-12">
+                            </div>
+
+                            <div class="ml-4 flex flex-1 flex-col sm:ml-6">
+                                <div>
+                                    <div class="flex justify-between">
+                                        <h4 class="text-sm">
+                                            <a href="#" class="font-medium text-gray-700 hover:text-gray-800" x-text="'Product ' + (i + 1)"></a>
+                                        </h4>
+                                        <button type="button"
+                                                @click="addProductToOrder(i)"
+                                                class="text-sm font-medium text-green-600 hover:text-green-500">
+                                            <span>Add to order</span>
+                                        </button>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500" x-text="product"></p>
+
+                                </div>
+
+                            </div>
+                        </li>
+                        </template>
+                    </ul>
+
+                    <div>
+                        <div class="mt-2">
+                            <input type="text"
+                                   class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                   placeholder="eg. LxWxH"
+                                   x-model="product_input"
+                                   @blur="addProduct"
+                            >
+                        </div>
+                    </div>
+
+                </div>
+                <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 ">
+                    <h3 class="text-xl font-bold leading-tight tracking-tight text-gray-900">Order</h3>
+
+                    <ul role="list" class="mt-5 divide-y divide-gray-200 border-b border-t border-gray-200">
+                        <template x-for="(i, j) in order">
+                            <li class="flex py-6">
+                                <div class="flex-shrink-0">
+                                    <img :src="'https://placehold.co/12x12?text=P' + (i + 1)"
+                                         alt="Product"
+                                         class="h-12 w-12 rounded-md object-cover object-center sm:h-12 sm:w-12">
+                                </div>
+
+                                <div class="ml-4 flex flex-1 flex-col sm:ml-6">
+                                    <div>
+                                        <div class="flex justify-between">
+                                            <h4 class="text-sm">
+                                                <a href="#" class="font-medium text-gray-700 hover:text-gray-800" x-text="'Product ' + (i+1)"></a>
+                                            </h4>
+
+
+                                            <button type="button"
+                                                    @click="deleteFromOrder(j)"
+                                                    class="text-sm font-medium text-red-600 hover:text-red-500">
+                                                <span>X</span>
+                                            </button>
+                                        </div>
+                                        <p class="mt-1 text-sm text-gray-500" x-text="products[i]"></p>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
+                <h3 class="text-xl font-bold leading-tight tracking-tight text-gray-900">Suggested box size</h3>
+                <template x-if="suggestion !== null && suggestion !== ''">
+                    <ul role="list" class="mt-5 divide-y divide-gray-200 border-b border-t border-gray-200">
+                        <li class="flex py-6 items-center">
+                            <div class="flex-shrink-0">
+                                <img :src="'https://placehold.co/12x12?text=B' + (suggestion  + 1)"
+                                     alt="Box"
+                                     class="h-12 w-12 rounded-md object-cover object-center sm:h-12 sm:w-12">
+                            </div>
+                            <div class="ml-4 flex flex-1 flex-col sm:ml-6">
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-sm">
+                                            <a href="#" class="font-medium text-gray-700 hover:text-gray-800" x-text="'Box '+ (suggestion + 1)"></a>
+                                        </h4>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500" x-text="boxes[suggestion]"></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </template>
+
+                <template x-if="!suggestion">
+                    <div class="mt-5 divide-y divide-gray-200 border-t border-gray-200">
+                        <p class="py-6" x-show="suggestion === null">Add a product to order to find the box</p>
+                        <p class="py-6" x-show="suggestion === ''">No box fits the selected products</p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('calculator', () => ({
+            box_input: '',
+            product_input: '',
+            suggestion: null,
+            images:[
+              'https://tailwindui.com/img/ecommerce-images/checkout-page-03-product-04.jpg',
+              'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
+              'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
+            ],
+            boxes: [
+                "5x4x2",
+                "5x4x3",
+                "5x4x4",
+                '6x5x10',
+                '20x20x20'
+            ],
+            products: [
+                "2x2x2",
+                "2x4x6",
+                "5x2x3",
+                '10x2x2',
+                '25x2x2',
+            ],
+            order:[
+
+            ],
+            addBox() {
+
+                if (!this.box_input) {
+                    return;
+                }
+                const box_size = (this.box_input || '').split('x');
+
+                if (box_size.length !== 3) {
+                    alert("Please enter a valid size. i.e. 4x5x6")
+                    return;
+                }
+
+                const newSize = (box_size[0] || '').trim() + 'x' + (box_size[1] || '').trim() + 'x' + (box_size[2] || '').trim();
+
+                if (!this.boxes.includes(newSize))
+                {
+                    this.boxes.push(newSize)
+                }
+
+                this.box_input = ''
+
+                this.find_suggestion()
+            },
+
+            addProduct(){
+                if (!this.product_input) {
+                    return;
+                }
+                const product_size = (this.product_input || '').split('x');
+
+                if (product_size.length !== 3) {
+                    alert("Please enter a valid size. i.e. 4x5x6")
+                    return;
+                }
+
+                const newSize = (product_size[0] || '').trim() + 'x' + (product_size[1] || '').trim() + 'x' + (product_size[2] || '').trim();
+
+                if (!this.products.includes(newSize))
+                {
+                    this.products.push(newSize)
+                }
+
+                this.product_input = ''
+            },
+
+            addProductToOrder(i){
+                this.order.push(i)
+                this.find_suggestion()
+            },
+
+            find_suggestion(){
+
+                if(this.order && this.order.length){
+                    let largest_side=0
+                    let second_largest_side=0
+                    let third_largest_side=0
+                    const total_volume = this.order.reduce((old, now) => {
+                        const product = this.products[now]
+                        const sizes = product.split('x')
+
+                        const sorted = [...sizes].sort((a,b)=>b-a)
+
+                        if(sorted[0] > largest_side){
+                            largest_side = sorted[0]
+                        }
+                        if(sorted[1] > second_largest_side){
+                            second_largest_side = sorted[1]
+                        }
+                        if(sorted[2] > third_largest_side){
+                            third_largest_side = sorted[2]
+                        }
+
+
+                        return old + (parseInt(sizes[0]) * parseInt(sizes[1]) * parseInt(sizes[2]) )
+                    }, 0);
+
+                    const eligible_boxes = this.boxes.map((box, i) => {
+                        const sizes = box.split('x')
+                        const sorted = [...sizes].sort((a,b)=>b-a)
+                        return ({id: i, dimensions: sorted, size: box, volume: (parseInt(sizes[0]) * parseInt(sizes[1]) * parseInt(sizes[2]) )})
+                    }).filter(box => {
+                        return total_volume <= box.volume && parseInt(box.dimensions[0]) >= parseInt(largest_side)  && parseInt(box.dimensions[1]) >= parseInt(second_largest_side)  && parseInt(box.dimensions[2]) >= parseInt(third_largest_side) ;
+                    });
+
+                    if(eligible_boxes && eligible_boxes.length){
+                        const sorted = [...eligible_boxes].sort((a,b) => a.volume - b.volume)
+                        this.suggestion = sorted[0].id
+                    }else{
+                        this.suggestion = ''
+                    }
+                }
+                else{
+                    this.suggestion = null;
+                }
+            },
+
+            deleteFromOrder(j){
+                this.order = this.order.filter((i, jj) => jj !== j);
+                this.find_suggestion()
+            }
+        }))
+    })
+</script>
+</body>
+</html>
